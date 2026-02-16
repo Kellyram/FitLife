@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo, useCallback, memo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import { ExerciseRow } from "@/components/workout/ExerciseRow"
 import { ExerciseGuide } from "@/components/workout/ExerciseGuide"
+import { EducationSection } from "@/components/workout/EducationSection"
 import { RestTimerProvider } from "@/context/RestTimerContext"
 import { Button } from "@fitlife/ui"
 import { Badge } from "@fitlife/ui"
@@ -93,34 +94,6 @@ function ElapsedTimer() {
     )
 }
 
-const MuscleFilterButton = memo(function MuscleFilterButton({
-    muscle,
-    isActive,
-    visual,
-    onClick,
-}: {
-    muscle: string
-    isActive: boolean
-    visual?: { dot: string }
-    onClick: () => void
-}) {
-    return (
-        <button
-            onClick={onClick}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl border whitespace-nowrap transition-all duration-200 ${
-                isActive
-                    ? "bg-blue-500/15 border-blue-500/40"
-                    : "bg-zinc-50 dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/10"
-            }`}
-        >
-            {visual && <div className={`w-2 h-2 rounded-full ${visual.dot}`} />}
-            <span className={`text-xs font-medium ${isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-600 dark:text-zinc-300"}`}>
-                {muscle}
-            </span>
-        </button>
-    )
-})
-
 export default function Workout() {
     const navigate = useNavigate()
     const [activeFilter, setActiveFilter] = useState("All")
@@ -148,11 +121,6 @@ export default function Workout() {
         })
     }, [exercises, logs, profile.targetMuscles])
 
-    const muscleGroups = useMemo(
-        () => ["All", ...Array.from(new Set(workoutRows.map((e) => e.muscle)))],
-        [workoutRows]
-    )
-
     const filteredExercises = useMemo(
         () => (activeFilter === "All" ? workoutRows : workoutRows.filter((e) => e.muscle === activeFilter)),
         [workoutRows, activeFilter]
@@ -172,8 +140,6 @@ export default function Workout() {
         if (profile.targetMuscles?.length) return "Suggested Workout"
         return "Full workout"
     }, [logs, profile.targetMuscles])
-
-    const handleFilterClick = useCallback((muscle: string) => setActiveFilter(muscle), [])
 
     const badges = useMemo(() => {
         const muscles = Array.from(new Set(workoutRows.slice(0, 4).map((e) => e.muscle)))
@@ -321,34 +287,17 @@ export default function Workout() {
                             </div>
 
                             <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4 mb-6">
-                                <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">📝 How to Add Exercise GIFs</h4>
+                                <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2"></h4>
                                 <ol className="text-xs text-blue-600 dark:text-blue-400/80 space-y-1 list-decimal list-inside">
-                                    <li>Find or create simple GIF animations of the exercise</li>
-                                    <li>Upload the GIF to a hosting service (Imgur, CloudStorage, etc.)</li>
-                                    <li>Copy the GIF URL</li>
-                                    <li>Update the exercise in Firebase with the <code className="bg-white/20 px-1 rounded text-[10px]">gifUrl</code> field</li>
-                                    <li>Refresh the page to see the GIF here</li>
+                                    
                                 </ol>
                             </div>
                         </motion.div>
                     </div>
                 )}
 
-                {/* Muscle Group Filter */}
-                <div className="px-4 py-4">
-                    <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Muscles Targeted</h3>
-                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                        {muscleGroups.map((muscle) => (
-                            <MuscleFilterButton
-                                key={muscle}
-                                muscle={muscle}
-                                isActive={activeFilter === muscle}
-                                visual={MUSCLE_VISUALS[muscle]}
-                                onClick={() => handleFilterClick(muscle)}
-                            />
-                        ))}
-                    </div>
-                </div>
+                {/* Education Section - Exercise Variations & Techniques */}
+                <EducationSection />
 
                 {/* Exercise List - personalised with previous data and images */}
                 <div className="px-4 pb-8 space-y-3">

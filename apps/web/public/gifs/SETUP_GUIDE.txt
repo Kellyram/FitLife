@@ -1,0 +1,83 @@
+/**
+ * GIF SETUP GUIDE
+ * 
+ * ========================================
+ * Step-by-step guide to add exercise GIFs
+ * ========================================
+ * 
+ * FOLDER STRUCTURE:
+ * 📁 apps/web/public/gifs/          ← Your GIFs go here
+ *    ├── push-up.gif
+ *    ├── bench-press.gif
+ *    ├── squat.gif
+ *    └── ... (add more GIFs here)
+ * 
+ * 
+ * STEP 1: SAVE YOUR GIF FILES
+ * ---------------------------
+ * Place your GIF files in: apps/web/public/gifs/
+ * 
+ * Naming examples:
+ * ✓ push-up.gif
+ * ✓ bench-press.gif
+ * ✓ deadlift.gif
+ * ✓ lat-pulldown.gif
+ * 
+ * 
+ * STEP 2: UPDATE THE MAPPING
+ * ---------------------------
+ * Edit: apps/web/src/lib/exerciseGifUrls.ts
+ * 
+ * Map the exercise name to the GIF file:
+ * 
+ * export const EXERCISE_GIFS: Record<string, string> = {
+ *   "Push-up": "/gifs/push-up.gif",          ← Add this line
+ *   "Bench Press": "/gifs/bench-press.gif",  ← Add this line
+ *   ... (other exercises)
+ * }
+ * 
+ * 
+ * STEP 3: DONE! 
+ * ---------------------------
+ * The components automatically use getExerciseGifUrl() to find your GIFs
+ * No component changes needed!
+ * 
+ * 
+ * CURRENT EXERCISES THAT NEED GIFS:
+ * ----------------------------------
+ * "Push-up"
+ * "Bench Press"
+ * "Deadlift"
+ * "Squat"
+ * "Lunges"
+ * "Lat Pulldown"
+ * "Dumbbell Row"
+ * "Shoulder Press"
+ * "Bicep Curl"
+ * "Tricep Dip"
+ * "Calf Raise"
+ * "Plank"
+ * "Leg Raise"
+ * "Russian Twist"
+ * "Running"
+ * "High Knees"
+ * "Jumping Jacks"
+ * "Burpees"
+ * "Mountain Climbers"
+ * 
+ * 
+ * KEY FILES:
+ * ----------
+ * 📄 apps/web/src/lib/exerciseGifUrls.ts  ← Edit this to add mappings
+ * 📄 apps/web/src/lib/gifUtils.ts         ← Helper functions for GIFs
+ * 📁 apps/web/public/gifs/                ← Save your GIF files here
+ * 
+ * 
+ * EXAMPLE: Adding Push-up GIF
+ * ---------------------------
+ * 1. Save "push-up.gif" to apps/web/public/gifs/
+ * 2. In exerciseGifUrls.ts, make sure this exists:
+ *    "Push-up": "/gifs/push-up.gif"
+ * 3. The app will automatically use it!
+ * 
+ */

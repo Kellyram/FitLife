@@ -4,6 +4,7 @@ import { Button } from "@fitlife/ui"
 import { Input } from "@fitlife/ui"
 import { ChevronDown, ChevronUp, Plus, Check, Timer } from "lucide-react"
 import { useRestTimer } from "@/context/RestTimerContext"
+import { getExerciseGifUrl } from "@/lib/exerciseGifUrls"
 
 interface SetData {
     weight: string
@@ -34,6 +35,9 @@ export const ExerciseRow = memo(function ExerciseRow({
     targetSets = 3,
     targetReps,
 }: ExerciseRowProps) {
+    // Use provided gifUrl first, fall back to mapped GIF URL
+    const displayGifUrl = gifUrl || getExerciseGifUrl(exerciseName)
+    
     const restTimer = useRestTimer()
     const [expanded, setExpanded] = useState(false)
     const [sets, setSets] = useState<SetData[]>(
@@ -74,10 +78,10 @@ export const ExerciseRow = memo(function ExerciseRow({
                 className="w-full flex items-center gap-3 p-3 text-left"
             >
                 {/* Exercise thumbnail: prefer GIF when available */}
-                {(gifUrl || image) ? (
+                {(displayGifUrl || image) ? (
                     <div className="h-14 w-14 rounded-xl overflow-hidden shrink-0 border border-zinc-200 dark:border-white/10">
                         <img
-                            src={gifUrl || image}
+                            src={displayGifUrl || image}
                             alt={exerciseName}
                             className="h-full w-full object-cover"
                             loading="lazy"
@@ -139,7 +143,7 @@ export const ExerciseRow = memo(function ExerciseRow({
                     >
                         <div className="px-3 pb-3 space-y-3">
                             {/* Large GIF demo when expanded - PROMINENT DISPLAY */}
-                            {(gifUrl || image) && (
+                            {(displayGifUrl || image) && (
                                 <motion.div
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: "auto" }}
@@ -147,7 +151,7 @@ export const ExerciseRow = memo(function ExerciseRow({
                                     className="rounded-xl overflow-hidden border-2 border-blue-500/30 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 aspect-video"
                                 >
                                     <img
-                                        src={gifUrl || image}
+                                        src={displayGifUrl || image}
                                         alt={`${exerciseName} demo`}
                                         className="w-full h-full object-contain p-2"
                                         loading="lazy"
