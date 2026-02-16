@@ -1,0 +1,70 @@
+# FitLife UI Redesign — Walkthrough
+
+## Overview
+
+Complete UI redesign of the FitLife fitness application, inspired by the Fittr app's aesthetic. The redesign introduces a vibrant orange color scheme, dark mode base (Zinc-950), glassmorphism effects, Inter typography, and animated micro-interactions across all screens.
+
+## What Changed
+
+### Design Foundations
+
+| File | Change |
+|------|--------|
+| [index.css](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/index.css) | New CSS variables: vibrant orange `--primary`, Zinc-950 dark background, subtle border colors, `glass` and `animate-pulse-glow` utilities |
+| [tailwind.config.js](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/tailwind.config.js) | Added `brand-orange`, `pulse-glow` animation keyframes, extended color palette |
+
+---
+
+### Login & Onboarding (4 files)
+
+| File | Change |
+|------|--------|
+| [LoginPage.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/pages/LoginPage.tsx) | Redesigned: dark bg, orange radial gradient, glassmorphism card, Google + Apple social login buttons, animated heading |
+| [SignupPage.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/pages/SignupPage.tsx) | Redesigned: matching orange theme, redirects to `/onboarding` |
+| [OnboardingPage.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/pages/OnboardingPage.tsx) | **[NEW]** Multi-step consultation: Basic Info → Body Metrics → Fitness Goal → Activity Level → Results with BMR/TDEE/macro calculations |
+
+---
+
+### Quantified Dashboard (4 components)
+
+| File | Change |
+|------|--------|
+| [DashboardHeader.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/dashboard/DashboardHeader.tsx) | Time-of-day greeting, orange-ringed avatar, notification bell, glassmorphism background |
+| [MacroRings.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/dashboard/MacroRings.tsx) | Larger SVG rings (radius=48), orange/amber/red palette, animated fill on mount |
+| [CalorieCard.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/dashboard/CalorieCard.tsx) | text-6xl hero calorie number, gradient progress bar, eaten/burned/net breakdown |
+| [ActivityGrid.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/dashboard/ActivityGrid.tsx) | Colored icons (Steps/Water/Sleep/Weight), mini progress bars, hover scale, staggered animations |
+| [Dashboard.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/pages/Dashboard.tsx) | Reordered: CalorieCard hero → MacroRings → ActivityGrid |
+
+---
+
+### Social Feed (2 files)
+
+| File | Change |
+|------|--------|
+| [Community.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/pages/Community.tsx) | Stories strip with orange gradient rings, Feed/Transformations/Tips tabs, 5 rich mock posts, create-post icon |
+| [PostCard.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/community/PostCard.tsx) | aspect-[4/5] images, animated heart likes, bookmark icons, transformation badges, time-ago display, engagement count formatting |
+
+---
+
+### Workout Logger (3 files)
+
+| File | Change |
+|------|--------|
+| [Workout.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/pages/Workout.tsx) | "Push Day" header with muscle group badges, live elapsed timer, 6 exercises with previous data, Finish button |
+| [ExerciseRow.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/workout/ExerciseRow.tsx) | Expandable rows with SET/KG/REPS columns, per-set completion checkmarks, Add Set button, ghost previous data |
+| [RestTimer.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/workout/RestTimer.tsx) | **[NEW]** Floating action button with countdown overlay, SVG ring timer, 30s/60s/90s/120s presets |
+
+---
+
+### App Shell (3 files)
+
+| File | Change |
+|------|--------|
+| [BottomNav.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/components/BottomNav.tsx) | **[NEW]** Fixed bottom nav: Home, Community, Workout, Profile tabs with orange active indicator |
+| [AppLayout.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/layouts/AppLayout.tsx) | **[NEW]** Dark background wrapper with bottom nav for all protected routes |
+| [App.tsx](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/App.tsx) | Updated routing: added `/onboarding`, wrapped protected routes in [AppLayout](file:///c:/Users/Kelly/OneDrive/Desktop/projects/fitlife/apps/web/src/layouts/AppLayout.tsx#4-14) |
+
+## Verification
+
+- **TypeScript**: `tsc --noEmit` passed with **zero errors**
+- **Dev server**: `pnpm dev` running without build failures

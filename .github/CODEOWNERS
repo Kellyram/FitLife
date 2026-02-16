@@ -1,0 +1,24 @@
+# Code owners for FitLife monorepo
+# These owners will be automatically requested for review when PRs are opened
+
+# Global owners (fallback)
+*       @Kelly
+
+# CI/CD and workflows
+/.github/       @Kelly
+
+# Config packages
+/packages/typescript-config/    @Kelly
+/packages/eslint-config/        @Kelly
+
+# Shared packages
+/packages/shared/       @Kelly
+/packages/ui/           @Kelly
+
+# Web app
+/apps/web/      @Kelly
+
+# Root configuration
+/turbo.json     @Kelly
+/firebase.json  @Kelly
+/.firebaserc    @Kelly

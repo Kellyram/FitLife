@@ -1,0 +1,28 @@
+{
+    "name": "@fitlife/shared",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./types": "./src/types/index.ts",
+        "./utils": "./src/utils/cn.ts"
+    },
+    "scripts": {
+        "lint": "eslint .",
+        "type-check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "zod": "^3.22.4",
+        "clsx": "^2.1.0",
+        "tailwind-merge": "^2.2.1"
+    },
+    "devDependencies": {
+        "@fitlife/typescript-config": "workspace:*",
+        "@fitlife/eslint-config": "workspace:*",
+        "eslint": "^9.0.0",
+        "typescript": "^5.3.3"
+    }
+}
