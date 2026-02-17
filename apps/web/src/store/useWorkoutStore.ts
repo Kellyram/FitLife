@@ -14,6 +14,7 @@ interface WorkoutState {
     completeSet: (exerciseId: string, setIndex: number, completed: boolean) => void;
     finishWorkout: () => void;
     cancelWorkout: () => void;
+    resetStore: () => void;
 }
 
 export const useWorkoutStore = create<WorkoutState>()(
@@ -72,6 +73,10 @@ export const useWorkoutStore = create<WorkoutState>()(
 
             cancelWorkout: () => {
                 set({ activeSession: null });
+            },
+
+            resetStore: () => {
+                set({ activeSession: null, history: [] });
             },
         }),
         {

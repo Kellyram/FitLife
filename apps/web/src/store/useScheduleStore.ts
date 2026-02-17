@@ -15,6 +15,7 @@ interface ScheduleState {
     addActivity: (activity: ScheduledActivity) => void;
     toggleCompletion: (id: string) => void;
     deleteActivity: (id: string) => void;
+    resetStore: () => void;
 }
 
 export const useScheduleStore = create<ScheduleState>()(
@@ -27,6 +28,7 @@ export const useScheduleStore = create<ScheduleState>()(
                     schedule: state.schedule.map((s) => (s.id === id ? { ...s, completed: !s.completed } : s)),
                 })),
             deleteActivity: (id) => set((state) => ({ schedule: state.schedule.filter((s) => s.id !== id) })),
+            resetStore: () => set({ schedule: [] }),
         }),
         {
             name: 'schedule-storage',

@@ -143,3 +143,47 @@ Removed missing animate-in CSS class
 
 Comment
 Ctrl+Alt+M
+
+
+
+Feature Walkthrough
+Per-User Data Isolation (Latest Fix)
+Problem: All Zustand stores used fixed localStorage keys, so switching accounts showed the previous user's workouts, nutrition, goals, and schedule.
+
+Fix: Added 
+resetStore()
+ to each data store and wired them into 
+AuthSync.tsx
+.
+
+Store	Change
+useWorkoutStore.ts
+resetStore()
+ clears activeSession + history
+useScheduleStore.ts
+resetStore()
+ clears schedule
+useNutritionStore.ts
+resetStore()
+ clears meals + waterCups
+useGoalStore.ts
+resetStore()
+ resets to default starter goals
+AuthSync
+ now calls all reset functions on both logout (uid → null) and user switch (uid changed).
+
+Earlier Features
+Workout Feature
+4 workout routines, interactive player, persisted history
+Achievements page (7 badges) + Schedule page driven by real workout data
+Nutrition Tracker
+20 common foods, meal logging, water tracking, custom food entry
+Dashboard cards (
+CalorieCard
+, 
+MacroRings
+) show real data
+Dedicated /nutrition page with full tracking UI
+
+Comment
+Ctrl+Alt+M

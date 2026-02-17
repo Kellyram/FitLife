@@ -33,6 +33,8 @@ interface NutritionState {
     getMealsForDate: (date: string) => MealEntry[];
     getTotalsForDate: (date: string) => { calories: number; protein: number; carbs: number; fats: number };
     getWaterForDate: (date: string) => number;
+
+    resetStore: () => void;
 }
 
 // Common foods database for quick logging
@@ -109,6 +111,8 @@ export const useNutritionStore = create<NutritionState>()(
             getWaterForDate: (date) => {
                 return get().waterCups[date] || 0;
             },
+
+            resetStore: () => set({ meals: [], waterCups: {} }),
         }),
         {
             name: 'fitlife-nutrition-storage',

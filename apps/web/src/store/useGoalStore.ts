@@ -9,6 +9,7 @@ interface GoalState {
     addGoal: (goal: Goal) => void;
     updateGoalProgress: (id: string, value: number) => void;
     deleteGoal: (id: string) => void;
+    resetStore: () => void;
 }
 
 export const useGoalStore = create<GoalState>()(
@@ -57,6 +58,12 @@ export const useGoalStore = create<GoalState>()(
                     }
                 }
             },
+            resetStore: () => set({
+                goals: [
+                    { id: '1', type: 'weight', targetValue: 65, currentValue: 70, unit: 'kg', description: 'Reach target weight' },
+                    { id: '2', type: 'consistency', targetValue: 3, currentValue: 1, unit: 'workouts/week', description: 'Workout 3 times a week' },
+                ],
+            }),
         }),
         {
             name: 'goal-storage',
