@@ -4,31 +4,21 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../hooks/useAuth';
 import { useFirestore } from '../hooks/useFirestore';
-import { useWorkoutStore } from '../store/useWorkoutStore';
 import { useGoalStore } from '../store/useGoalStore';
 import { useUserStore } from '../store/useUserStore';
 import type { UserProfile } from '@fitlife/shared';
 
 export const DataSync = () => {
     const { user } = useAuth();
-    const { useUserDocuments: useWorkoutLogs } = useFirestore('workout_logs');
     const { useUserDocuments: useGoals } = useFirestore('goals');
 
     // We can't use the hook for goals/logs directly inside useEffect if the hook itself returns data
     // The hook `useUserDocuments` returns `docs`.
-    const workoutLogs = useWorkoutLogs();
+    // The hook `useUserDocuments` returns `docs`.
     const goals = useGoals();
 
-    const setLogs = useWorkoutStore((state) => state.setLogs);
     const setGoals = useGoalStore((state) => state.setGoals);
     const setProfile = useUserStore((state) => state.setProfile);
-
-    // Sync Workouts
-    useEffect(() => {
-        if (user && workoutLogs.length > 0) {
-            setLogs(workoutLogs as any);
-        }
-    }, [user, workoutLogs, setLogs]);
 
     // Sync Goals
     useEffect(() => {

@@ -6,11 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@fitlife/ui"
 import { Badge } from "@fitlife/ui"
 import { useTrainers } from "@/hooks/useTrainers"
 import { useUserStore } from "@/store/useUserStore"
+import { useNutritionStore, getToday } from "@/store/useNutritionStore"
 import { Loader2 } from "lucide-react"
 import { useMemo } from "react"
 
 const MOTIVATIONAL_QUOTES = [
-    { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
+    { text: "The only bad workout is the one that didn't happen.", author: "Kelly musonda" },
     { text: "Success is the sum of small efforts repeated day in and day out.", author: "Robert Collier" },
     { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
     { text: "Great things never come from comfort zones.", author: "Unknown" },
@@ -31,17 +32,28 @@ export default function Dashboard() {
         return MOTIVATIONAL_QUOTES[hash % MOTIVATIONAL_QUOTES.length]
     }, [])
 
+    const { getTotalsForDate, getWaterForDate, addWater, removeWater } = useNutritionStore()
+    const today = getToday()
+    const totals = getTotalsForDate(today)
+
     const tdee = profile.goalCalories || 2500
-    const consumed = Math.floor(Math.random() * 1500) + 500
-    const caloriePercentage = (consumed / tdee) * 100
+    const consumed = totals.calories
+    const caloriePercentage = tdee > 0 ? (consumed / tdee) * 100 : 0
+
+    const weight = profile.weight || 70
+    const goalCals = profile.goalCalories || profile.tdee || 2500
+    const proteinGoal = Math.round(weight * 2)
+    const fatGoal = Math.round(weight * 0.8)
+    const carbGoal = Math.max(Math.round((goalCals - proteinGoal * 4 - fatGoal * 9) / 4), 0)
 
     const macroData = {
-        protein: { consumed: Math.floor(Math.random() * 80) + 40, goal: 120, unit: "g" },
-        carbs: { consumed: Math.floor(Math.random() * 150) + 100, goal: 300, unit: "g" },
-        fats: { consumed: Math.floor(Math.random() * 40) + 20, goal: 70, unit: "g" },
+        protein: { consumed: totals.protein, goal: proteinGoal, unit: "g" },
+        carbs: { consumed: totals.carbs, goal: carbGoal, unit: "g" },
+        fats: { consumed: totals.fats, goal: fatGoal, unit: "g" },
     }
 
-    const waterIntake = { consumed: Math.floor(Math.random() * 6) + 2, goal: 8, unit: "cups" }
+    const waterConsumed = getWaterForDate(today)
+    const waterGoal = 8
 
     const displayedTrainers = trainers.slice(0, 9)
     const featuredTrainer = trainers[0]
@@ -79,13 +91,6 @@ export default function Dashboard() {
                                 >
                                     Find Your Trainer
                                     <ArrowRight className="h-4 w-4 ml-2" />
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => navigate("/workout")}
-                                    className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 px-6 py-2.5 rounded-xl h-auto"
-                                >
-                                    Start Workout
                                 </Button>
                             </div>
                         </motion.div>
@@ -335,13 +340,12 @@ export default function Dashboard() {
                                         initial={{ width: 0 }}
                                         animate={{ width: `${Math.min(caloriePercentage, 100)}%` }}
                                         transition={{ duration: 0.8, ease: "easeOut" }}
-                                        className={`h-full rounded-full transition-colors ${
-                                            caloriePercentage < 80
-                                                ? "bg-gradient-to-r from-emerald-500 to-green-400"
-                                                : caloriePercentage < 100
-                                                  ? "bg-gradient-to-r from-blue-500 to-blue-400"
-                                                  : "bg-gradient-to-r from-orange-500 to-red-400"
-                                        }`}
+                                        className={`h-full rounded-full transition-colors ${caloriePercentage < 80
+                                            ? "bg-gradient-to-r from-emerald-500 to-green-400"
+                                            : caloriePercentage < 100
+                                                ? "bg-gradient-to-r from-blue-500 to-blue-400"
+                                                : "bg-gradient-to-r from-orange-500 to-red-400"
+                                            }`}
                                     />
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-2">{Math.round(caloriePercentage)}% of daily goal</p>
@@ -412,26 +416,34 @@ export default function Dashboard() {
                                         <span className="text-sm font-medium text-zinc-300">Water Intake</span>
                                     </div>
                                     <span className="text-sm font-bold text-cyan-300">
-                                        {waterIntake.consumed} / {waterIntake.goal} cups
+                                        {waterConsumed} / {waterGoal} cups
                                     </span>
                                 </div>
                                 <div className="grid grid-cols-4 gap-2">
-                                    {Array.from({ length: waterIntake.goal }).map((_, i) => (
+                                    {Array.from({ length: waterGoal }).map((_, i) => (
                                         <motion.div
                                             key={i}
                                             initial={{ opacity: 0, scale: 0.5 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className={`aspect-square rounded-lg border-2 transition-all ${
-                                                i < waterIntake.consumed
-                                                    ? "bg-cyan-500/30 border-cyan-400"
-                                                    : "bg-slate-700/30 border-slate-600"
-                                            }`}
+                                            onClick={() => {
+                                                if (i < waterConsumed) {
+                                                    removeWater(today)
+                                                } else if (i === waterConsumed) {
+                                                    addWater(today)
+                                                }
+                                            }}
+                                            className={`aspect-square rounded-lg border-2 transition-all cursor-pointer hover:scale-105 ${i < waterConsumed
+                                                ? "bg-cyan-500/30 border-cyan-400"
+                                                : "bg-slate-700/30 border-slate-600 hover:border-cyan-400/50"
+                                                }`}
                                         >
                                             <div className="w-full h-full flex items-center justify-center">
-                                                {i < waterIntake.consumed && (
+                                                {i < waterConsumed ? (
                                                     <Droplets className="h-3 w-3 text-cyan-400" />
-                                                )}
+                                                ) : i === waterConsumed ? (
+                                                    <span className="text-[10px] text-zinc-500">+</span>
+                                                ) : null}
                                             </div>
                                         </motion.div>
                                     ))}
@@ -440,16 +452,20 @@ export default function Dashboard() {
 
                             {/* Quick Actions */}
                             <div className="space-y-2">
-                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl h-10 text-sm">
+                                <Button
+                                    onClick={() => navigate("/nutrition")}
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl h-10 text-sm"
+                                >
                                     <Heart className="h-4 w-4 mr-2" />
                                     Log Meal
                                 </Button>
                                 <Button
                                     variant="outline"
+                                    onClick={() => navigate("/nutrition")}
                                     className="w-full border-slate-600 text-slate-300 hover:bg-slate-700/50 rounded-xl h-10 text-sm"
                                 >
                                     <Zap className="h-4 w-4 mr-2" />
-                                    View Recommendations
+                                    View All Nutrition
                                 </Button>
                             </div>
                         </motion.div>

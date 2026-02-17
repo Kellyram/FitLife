@@ -13,15 +13,14 @@ const LoginPage = lazy(() => import("@/pages/LoginPage"))
 const SignupPage = lazy(() => import("@/pages/SignupPage"))
 const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"))
 const Dashboard = lazy(() => import("@/pages/Dashboard"))
-const Community = lazy(() => import("@/pages/Community"))
-const Workout = lazy(() => import("@/pages/Workout"))
-const WorkoutLog = lazy(() => import("@/pages/WorkoutLog"))
 const GoalsPage = lazy(() => import("@/pages/GoalsPage"))
 const SchedulePage = lazy(() => import("@/pages/SchedulePage"))
 const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"))
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"))
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"))
 const TrainersPage = lazy(() => import("@/pages/TrainersPage"))
+const WorkoutsPage = lazy(() => import("@/pages/WorkoutsPage"))
+const NutritionPage = lazy(() => import("@/pages/NutritionPage"))
 
 // Redirects away from /onboarding if already completed
 function OnboardingRedirect({ children }: { children: React.ReactNode }) {
@@ -42,32 +41,45 @@ function AppRoutes() {
   const { user } = useAuth();
 
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Landing />} />
-        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
-        <Route path="/signup" element={user ? <Navigate to="/onboarding" replace /> : <SignupPage />} />
-        <Route path="/onboarding" element={<ProtectedRoute><OnboardingRedirect><OnboardingPage /></OnboardingRedirect></ProtectedRoute>} />
+    <Routes>
+      {/* Public routes */}
+      <Route path="/" element={
+        <Suspense fallback={<PageLoader />}>
+          {user ? <Navigate to="/dashboard" replace /> : <Landing />}
+        </Suspense>
+      } />
+      <Route path="/login" element={
+        <Suspense fallback={<PageLoader />}>
+          {user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+        </Suspense>
+      } />
+      <Route path="/signup" element={
+        <Suspense fallback={<PageLoader />}>
+          {user ? <Navigate to="/onboarding" replace /> : <SignupPage />}
+        </Suspense>
+      } />
+      <Route path="/onboarding" element={
+        <Suspense fallback={<PageLoader />}>
+          <ProtectedRoute><OnboardingRedirect><OnboardingPage /></OnboardingRedirect></ProtectedRoute>
+        </Suspense>
+      } />
 
-        {/* Protected routes with layout + onboarding gate */}
-        <Route element={<ProtectedRoute><OnboardingGuard><AppLayout /></OnboardingGuard></ProtectedRoute>}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/trainers" element={<TrainersPage />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/workout" element={<Workout />} />
-          <Route path="/workout-logs" element={<WorkoutLog />} />
-          <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/schedule" element={<SchedulePage />} />
-          <Route path="/achievements" element={<AchievementsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-        </Route>
+      {/* Protected routes with layout + onboarding gate */}
+      <Route element={<ProtectedRoute><OnboardingGuard><AppLayout /></OnboardingGuard></ProtectedRoute>}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/trainers" element={<TrainersPage />} />
+        <Route path="/nutrition" element={<NutritionPage />} />
+        <Route path="/goals" element={<GoalsPage />} />
+        <Route path="/workouts" element={<WorkoutsPage />} />
+        <Route path="/schedule" element={<SchedulePage />} />
+        <Route path="/achievements" element={<AchievementsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+      </Route>
 
-        {/* Default redirect */}
-        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />
-      </Routes>
-    </Suspense>
+      {/* Default redirect */}
+      <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />
+    </Routes>
   )
 }
 

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion"
 import { Trophy, Flame, Dumbbell, Target, Clock, Star, Lock } from "lucide-react"
 import { useWorkoutStore } from "@/store/useWorkoutStore"
+import { WORKOUTS } from "@/data/workouts"
 
-interface Badge {
+interface AchievementBadge {
     id: string
     title: string
     description: string
@@ -13,23 +14,40 @@ interface Badge {
 }
 
 export default function AchievementsPage() {
-    const logs = useWorkoutStore((state) => state.logs)
-    const totalWorkouts = logs.length
+    const { history } = useWorkoutStore()
+    const totalWorkouts = history.length
+
+    // Calculate total exercises completed across all sessions
+    const totalExercises = history.reduce((acc, session) => {
+        return acc + Object.keys(session.completedExercises).length
+    }, 0)
+
+    // Calculate total workout time in minutes
+    const totalMinutes = history.reduce((acc, session) => {
+        // duration is in ms (Date.now() diff), convert to minutes
+        const mins = session.duration > 0 ? Math.round(session.duration / 60000) : 0
+        // Fallback: look up the workout's estimated duration
+        if (mins === 0) {
+            const workout = WORKOUTS.find(w => w.id === session.workoutId)
+            return acc + (workout?.duration || 0)
+        }
+        return acc + mins
+    }, 0)
 
     // Calculate current streak
     const calculateStreak = () => {
-        if (logs.length === 0) return 0
+        if (history.length === 0) return 0
 
         // Create a set of dates with workouts
         const workoutDates = new Set<string>()
-        logs.forEach(log => {
-            const date = new Date(log.date)
+        history.forEach(session => {
+            const date = new Date(session.date)
             workoutDates.add(date.toDateString())
         })
 
         // Check streak from today going backwards
         let streak = 0
-        let currentDate = new Date()
+        const currentDate = new Date()
 
         while (workoutDates.has(currentDate.toDateString())) {
             streak++
@@ -38,11 +56,11 @@ export default function AchievementsPage() {
 
         // If no streak today, check if there was a streak ending yesterday
         if (streak === 0) {
-            currentDate = new Date()
-            currentDate.setDate(currentDate.getDate() - 1)
-            while (workoutDates.has(currentDate.toDateString())) {
+            const yesterday = new Date()
+            yesterday.setDate(yesterday.getDate() - 1)
+            while (workoutDates.has(yesterday.toDateString())) {
                 streak++
-                currentDate.setDate(currentDate.getDate() - 1)
+                yesterday.setDate(yesterday.getDate() - 1)
             }
         }
 
@@ -50,11 +68,13 @@ export default function AchievementsPage() {
     }
 
     const currentStreak = calculateStreak()
-
-    // Check for 3-day streak badge
     const hasConsistencyBadge = currentStreak >= 3
 
-    const badges: Badge[] = [
+    // Check for variety badge: completed at least 3 different workout types
+    const uniqueWorkoutTypes = new Set(history.map(s => s.workoutId)).size
+    const hasVarietyBadge = uniqueWorkoutTypes >= 3
+
+    const badges: AchievementBadge[] = [
         {
             id: "first-workout",
             title: "First Step",
@@ -109,9 +129,28 @@ export default function AchievementsPage() {
             color: "text-cyan-400",
             bgColor: "bg-cyan-500/10",
         },
+        {
+            id: "variety",
+            title: "Well-Rounded",
+            description: "Try 3 different workout routines",
+            icon: Target,
+            unlocked: hasVarietyBadge,
+            color: "text-pink-400",
+            bgColor: "bg-pink-500/10",
+        },
     ]
 
     const unlockedCount = badges.filter((b) => b.unlocked).length
+
+    // Get recent workout history with names
+    const recentHistory = history.slice(0, 5).map(session => {
+        const workout = WORKOUTS.find(w => w.id === session.workoutId)
+        return {
+            ...session,
+            name: workout?.name || "Unknown Workout",
+            exerciseCount: workout?.exercises.length || 0,
+        }
+    })
 
     return (
         <div className="p-4 lg:p-6 max-w-3xl mx-auto">
@@ -148,11 +187,10 @@ export default function AchievementsPage() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.08 }}
-                            className={`rounded-2xl border p-4 text-center transition-colors ${
-                                badge.unlocked
-                                    ? "bg-card border-border"
-                                    : "bg-card/50 border-border/50 opacity-50"
-                            }`}
+                            className={`rounded-2xl border p-4 text-center transition-colors ${badge.unlocked
+                                ? "bg-card border-border"
+                                : "bg-card/50 border-border/50 opacity-50"
+                                }`}
                         >
                             <div className={`h-12 w-12 rounded-xl ${badge.bgColor} flex items-center justify-center mx-auto mb-2 relative`}>
                                 <badge.icon className={`h-5 w-5 ${badge.unlocked ? badge.color : "text-muted-foreground"}`} />
@@ -169,12 +207,16 @@ export default function AchievementsPage() {
                 </div>
 
                 {/* Stats */}
-                <div className="rounded-2xl bg-card border border-border p-4">
+                <div className="rounded-2xl bg-card border border-border p-4 mb-6">
                     <h3 className="text-sm font-semibold text-foreground mb-3">Your Stats</h3>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-4 gap-3">
                         <div className="text-center">
                             <p className="text-2xl font-bold text-foreground">{totalWorkouts}</p>
                             <p className="text-[10px] text-muted-foreground">Total Workouts</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-foreground">{totalExercises}</p>
+                            <p className="text-[10px] text-muted-foreground">Exercises Done</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-foreground">{unlockedCount}</p>
@@ -185,6 +227,46 @@ export default function AchievementsPage() {
                             <p className="text-[10px] text-muted-foreground">Day Streak</p>
                         </div>
                     </div>
+                </div>
+
+                {/* Recent Workout History */}
+                <div className="rounded-2xl bg-card border border-border p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3">Recent Workouts</h3>
+                    {recentHistory.length === 0 ? (
+                        <div className="text-center py-8">
+                            <Dumbbell className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-50" />
+                            <p className="text-sm text-muted-foreground">No workouts completed yet</p>
+                            <p className="text-xs text-muted-foreground mt-1">Start a workout to earn badges!</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-2">
+                            {recentHistory.map((session) => (
+                                <div
+                                    key={session.id}
+                                    className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-border"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                            <Dumbbell className="h-4 w-4 text-blue-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{session.name}</p>
+                                            <p className="text-[10px] text-muted-foreground">
+                                                {new Date(session.date).toLocaleDateString(undefined, {
+                                                    month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+                                                })}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-xs text-muted-foreground">
+                                            {Object.keys(session.completedExercises).length}/{session.exerciseCount} exercises
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </motion.div>
         </div>

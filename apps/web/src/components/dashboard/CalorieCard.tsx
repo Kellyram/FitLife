@@ -1,11 +1,16 @@
 import { motion } from "framer-motion"
 import { useUserStore } from "@/store/useUserStore"
+import { useNutritionStore, getToday } from "@/store/useNutritionStore"
 import { Utensils, Flame, Activity } from "lucide-react"
 
 export function CalorieCard() {
     const profile = useUserStore((state) => state.profile)
+    const { getTotalsForDate } = useNutritionStore()
+
     const tdee = profile.goalCalories || profile.tdee || 2500
-    const consumed = 0 // Will increase as user logs meals
+    const today = getToday()
+    const totals = getTotalsForDate(today)
+    const consumed = totals.calories
     const remaining = tdee - consumed
     const progress = tdee > 0 ? (consumed / tdee) * 100 : 0
 
@@ -26,7 +31,7 @@ export function CalorieCard() {
                 <div className="flex flex-col items-center gap-4">
                     <div className="text-center">
                         <motion.span
-                            className="text-6xl font-extrabold tracking-tighter text-foreground"
+                            className={`text-6xl font-extrabold tracking-tighter ${remaining >= 0 ? "text-foreground" : "text-red-400"}`}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -43,7 +48,10 @@ export function CalorieCard() {
                         </div>
                         <div className="relative h-3 w-full overflow-hidden rounded-full bg-zinc-800/80">
                             <motion.div
-                                className="h-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500"
+                                className={`h-full rounded-full ${progress <= 100
+                                    ? "bg-gradient-to-r from-blue-600 to-cyan-500"
+                                    : "bg-gradient-to-r from-orange-500 to-red-500"
+                                    }`}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${Math.min(progress, 100)}%` }}
                                 transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}

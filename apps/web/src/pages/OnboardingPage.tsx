@@ -28,21 +28,21 @@ const GENDERS = [
     {
         value: "male" as const,
         label: "Male",
-        image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=520&fit=crop&crop=top",
+        image: "/images/man.jpg",
     },
     {
         value: "female" as const,
         label: "Female",
-        image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=520&fit=crop&crop=top",
+        image: "/images/woman.jpg",
     },
 ]
 
 // ─── Age Ranges ─────────────────────────────────────────────
 const AGE_RANGES = [
-    { value: "18-29", label: "Age: 18-29", age: 24, image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=340&h=340&fit=crop&crop=face" },
-    { value: "30-39", label: "Age: 30-39", age: 35, image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=340&h=340&fit=crop&crop=face" },
-    { value: "40-49", label: "Age: 40-49", age: 45, image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=340&h=340&fit=crop&crop=face" },
-    { value: "50+", label: "Age: 50+", age: 55, image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=340&h=340&fit=crop&crop=face" },
+    { value: "18-29", label: "Age: 18-29", age: 24, image: "/images/youngest.jpg" },
+    { value: "30-39", label: "Age: 30-39", age: 35, image: "/images/young.jpg" },
+    { value: "40-49", label: "Age: 40-49", age: 45, image: "/images/old.jpg" },
+    { value: "50+", label: "Age: 50+", age: 55, image: "/images/oldest.jpg" },
 ]
 
 // ─── Goals ──────────────────────────────────────────────────
@@ -54,35 +54,35 @@ const GOALS = [
 
 // ─── Body Type (current) ────────────────────────────────────
 const BODY_TYPES = [
-    { value: "slim", label: "Slender", image: "https://images.unsplash.com/photo-1544033527-b192d25d48e6?w=340&h=400&fit=crop&crop=center" },
-    { value: "average", label: "Average", image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=340&h=400&fit=crop&crop=center" },
-    { value: "heavy", label: "Heavy", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=340&h=400&fit=crop&crop=center" },
-    { value: "very-heavy", label: "Very heavy", image: "https://images.unsplash.com/photo-1598971639058-00066e5dd9e0?w=340&h=400&fit=crop&crop=center" },
+    { value: "slim", label: "Slender", image: "/images/smallll.jpg" },
+    { value: "average", label: "Average", image: "/images/average2.jpg" },
+    { value: "heavy", label: "Heavy", image: "/images/huge.jpg" },
+    { value: "very-heavy", label: "Very heavy", image: "/images/very-huge.jpg" },
 ]
 
 // ─── Target Body ────────────────────────────────────────────
 const TARGET_BODIES = [
-    { value: "slim", label: "Slim", image: "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=340&h=400&fit=crop&crop=center" },
-    { value: "fit", label: "Fit", image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=340&h=400&fit=crop&crop=center" },
-    { value: "muscular", label: "Muscular", image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=340&h=400&fit=crop&crop=center" },
-    { value: "bodybuilding", label: "Bodybuilding", image: "https://images.unsplash.com/photo-1605296867424-35fc25c9212a?w=340&h=400&fit=crop&crop=center" },
+    { value: "slim", label: "Slim", image: "/images/Slender.jpg" },
+    { value: "fit", label: "Fit", image: "/images/average.jpg" },
+    { value: "muscular", label: "Muscular", image: "/images/heavy.jpg" },
+    { value: "bodybuilding", label: "Bodybuilding", image: "/images/very-heavy.jpg" },
 ]
 
 // ─── Workout Location ───────────────────────────────────────
 const WORKOUT_LOCATIONS = [
-    { value: "home" as const, label: "At Home", desc: "Training with minimal or no equipment", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=160&h=160&fit=crop" },
-    { value: "gym" as const, label: "Gym", desc: "Training with machines, cables, and free weights", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=160&h=160&fit=crop" },
-    { value: "hybrid" as const, label: "Hybrid", desc: "Combination of gym and home workouts", image: "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=160&h=160&fit=crop" },
+    { value: "home" as const, label: "At Home", desc: "Training with minimal or no equipment", image: "/images/home.jpg" },
+    { value: "gym" as const, label: "Gym", desc: "Training with machines, cables, and free weights", image: "/images/at-gym.jpg" },
+    { value: "hybrid" as const, label: "Hybrid", desc: "Combination of gym and home workouts", image: "/images/hybrid.jpg" },
 ]
 
 // ─── Target Muscles ─────────────────────────────────────────
 const MUSCLE_GROUPS = [
-    { value: "chest", label: "Chest", image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=80&h=80&fit=crop" },
-    { value: "shoulders", label: "Shoulders", image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=80&h=80&fit=crop" },
-    { value: "arms", label: "Arms", image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=80&h=80&fit=crop" },
-    { value: "abs", label: "Abs", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=80&fit=crop" },
-    { value: "back", label: "Back", image: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=80&h=80&fit=crop" },
-    { value: "legs", label: "Legs", image: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=80&h=80&fit=crop" },
+    { value: "chest", label: "Chest", image: "/images/chest.jpg" },
+    { value: "shoulders", label: "Shoulders", image: "/images/shoulders.jpg" },
+    { value: "arms", label: "Arms", image: "/images/arms.jpg" },
+    { value: "abs", label: "Abs", image: "/images/abs.png" },
+    { value: "back", label: "Back", image: "/images/back.jpg" },
+    { value: "legs", label: "Legs", image: "/images/legs.png" },
 ]
 
 // ─── Activity Levels ────────────────────────────────────────

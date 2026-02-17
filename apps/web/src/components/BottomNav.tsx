@@ -1,12 +1,12 @@
 import { memo } from "react"
 import { NavLink, useLocation } from "react-router-dom"
-import { LayoutDashboard, Users, Dumbbell, User } from "lucide-react"
+import { LayoutDashboard, User, Dumbbell, Apple } from "lucide-react"
 import { motion } from "framer-motion"
 
 const navItems = [
     { to: "/dashboard", icon: LayoutDashboard, label: "Home" },
-    { to: "/community", icon: Users, label: "Community" },
-    { to: "/workout", icon: Dumbbell, label: "Workout" },
+    { to: "/workouts", icon: Dumbbell, label: "Workouts" },
+    { to: "/nutrition", icon: Apple, label: "Nutrition" },
     { to: "/profile", icon: User, label: "Profile" },
 ]
 

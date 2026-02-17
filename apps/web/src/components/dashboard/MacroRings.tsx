@@ -1,6 +1,7 @@
 import { memo, useMemo } from "react"
 import { motion } from "framer-motion"
 import { useUserStore } from "@/store/useUserStore"
+import { useNutritionStore, getToday } from "@/store/useNutritionStore"
 
 interface RingProps {
     label: string
@@ -17,7 +18,7 @@ const Ring = memo(function Ring({ label, value, total, color, bgColor, radius, s
     const circumference = normalizedRadius * 2 * Math.PI
     const progress = Math.min(value / total, 1)
     const strokeDashoffset = circumference - progress * circumference
-    const remaining = total - value
+    const remaining = Math.max(total - value, 0)
 
     return (
         <div className="flex flex-col items-center gap-2">
@@ -64,6 +65,10 @@ const Ring = memo(function Ring({ label, value, total, color, bgColor, radius, s
 
 export function MacroRings() {
     const profile = useUserStore((state) => state.profile)
+    const { getTotalsForDate } = useNutritionStore()
+
+    const today = getToday()
+    const totals = getTotalsForDate(today)
 
     // Compute personalized macro targets from onboarding data
     const macros = useMemo(() => {
@@ -99,7 +104,7 @@ export function MacroRings() {
                 <div className="flex justify-around">
                     <Ring
                         label="Protein"
-                        value={0}
+                        value={totals.protein}
                         total={macros.proteinTotal}
                         color="#3B82F6"
                         bgColor="rgba(59,130,246,0.12)"
@@ -108,7 +113,7 @@ export function MacroRings() {
                     />
                     <Ring
                         label="Carbs"
-                        value={0}
+                        value={totals.carbs}
                         total={macros.carbTotal}
                         color="#22D3EE"
                         bgColor="rgba(34,211,238,0.12)"
@@ -117,7 +122,7 @@ export function MacroRings() {
                     />
                     <Ring
                         label="Fats"
-                        value={0}
+                        value={totals.fats}
                         total={macros.fatTotal}
                         color="#14B8A6"
                         bgColor="rgba(20,184,166,0.12)"

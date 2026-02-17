@@ -3,10 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@fitlife/ui"
 import { ThemeToggle } from "@fitlife/ui"
 import { useAuth } from "@/context/AuthContext"
 import { useUserStore } from "@/store/useUserStore"
-import { useWorkoutStore } from "@/store/useWorkoutStore"
 import {
     LayoutDashboard,
-    ClipboardList,
     Target,
     User,
     Calendar,
@@ -15,11 +13,14 @@ import {
     LogOut,
     GraduationCap,
     ExternalLink,
+    Dumbbell,
+    Apple,
 } from "lucide-react"
 
 const navItems = [
     { to: "/dashboard", icon: LayoutDashboard, label: "Home" },
-    { to: "/workout-logs", icon: ClipboardList, label: "Workout Logs" },
+    { to: "/workouts", icon: Dumbbell, label: "Workouts" },
+    { to: "/nutrition", icon: Apple, label: "Nutrition" },
     { to: "/goals", icon: Target, label: "My Goals" },
     { to: "/profile", icon: User, label: "Profile Settings" },
     { to: "/schedule", icon: Calendar, label: "Schedule" },
@@ -37,7 +38,6 @@ export function Sidebar() {
     const firstName = profile.name?.split(" ")[0] || user?.displayName?.split(" ")[0] || "User"
 
     const handleSignOut = async () => {
-        useWorkoutStore.getState().setLogs([])
         await logout()
         navigate("/login")
     }
@@ -48,7 +48,7 @@ export function Sidebar() {
             <div className="p-4 border-b border-border">
                 <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={user?.photoURL || profile.photoURL} alt={profile.name} />
+                        <AvatarImage src={user?.photoURL || profile.photoURL || undefined} alt={profile.name} />
                         <AvatarFallback className="bg-primary/20 text-primary text-sm font-bold">
                             {firstName.charAt(0).toLowerCase()}
                         </AvatarFallback>
@@ -78,10 +78,9 @@ export function Sidebar() {
                         key={item.to}
                         to={item.to}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                                isActive
-                                    ? "bg-primary/10 text-primary"
-                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive
+                                ? "bg-primary/10 text-primary"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`
                         }
                     >

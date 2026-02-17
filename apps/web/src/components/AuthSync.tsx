@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react"
 import { useAuth } from "@/context/AuthContext"
 import { useUserStore } from "@/store/useUserStore"
-import { useWorkoutStore } from "@/store/useWorkoutStore"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 
@@ -15,7 +14,6 @@ export function AuthSync() {
     const { user } = useAuth()
     const resetProfile = useUserStore((s) => s.resetProfile)
     const setProfile = useUserStore((s) => s.setProfile)
-    const setLogs = useWorkoutStore((s) => s.setLogs)
     const previousUidRef = useRef<string | null>(null)
 
     useEffect(() => {
@@ -24,7 +22,6 @@ export function AuthSync() {
         if (currentUid === null) {
             // User logged out
             resetProfile()
-            setLogs([])
             previousUidRef.current = null
             return
         }
@@ -32,7 +29,6 @@ export function AuthSync() {
         if (previousUidRef.current !== currentUid) {
             // Different user logged in - reset stores
             resetProfile(user?.displayName ?? undefined)
-            setLogs([])
             previousUidRef.current = currentUid
 
             // Load returning user's profile from Firestore to ensure onboarding state is correct
@@ -53,7 +49,7 @@ export function AuthSync() {
 
             loadUserProfile()
         }
-    }, [user?.uid, user?.displayName, resetProfile, setProfile, setLogs])
+    }, [user?.uid, user?.displayName, resetProfile, setProfile])
 
     return null
 }

@@ -67,7 +67,7 @@ export interface UserProfile {
     age: number;
     unitSystem: 'metric' | 'imperial';
     theme: 'light' | 'dark' | 'system';
-    photoURL?: string;
+    photoURL?: string | null;
     weightHistory: { date: string; weight: number }[];
     // Onboarding data
     gender?: 'male' | 'female';

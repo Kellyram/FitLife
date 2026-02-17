@@ -68,3 +68,78 @@ Complete UI redesign of the FitLife fitness application, inspired by the Fittr a
 
 - **TypeScript**: `tsc --noEmit` passed with **zero errors**
 - **Dev server**: `pnpm dev` running without build failures
+Feature Walkthrough: Workouts + Nutrition Tracker
+Workout Feature
+types/workout.ts
+ — 
+Exercise
+, 
+Workout
+, 
+WorkoutSession
+ types
+data/workouts.ts
+ — 4 routines with GIF refs and form cues
+useWorkoutStore.ts
+ — Zustand store with persisted history
+WorkoutsPage.tsx
+ — Workout library grid
+ActiveWorkoutView.tsx
+ — Interactive workout player
+AchievementsPage.tsx
+ — 7 badges driven by real workout history
+SchedulePage.tsx
+ — Calendar with completed (🟢) / scheduled (🔵) workouts
+Nutrition Tracker (NEW)
+Store
+useNutritionStore.ts
+ — Persisted Zustand store
+20 common foods database (chicken, rice, salmon, eggs, etc.)
+Meal logging with 
+FoodItem
+, servings, meal type, date/time
+Water intake tracking (cups per day)
+getTotalsForDate()
+ — aggregated calories, protein, carbs, fats
+addMeal()
+, 
+removeMeal()
+, 
+addWater()
+, 
+removeWater()
+Nutrition Page
+NutritionPage.tsx
+ — Full tracking UI
+Calorie progress bar with remaining/over indicator
+Macro bars (protein, carbs, fats) with personalized goals
+Clickable water cup grid (8-cup goal)
+Meal type tabs: Breakfast ☕ / Lunch ☀️ / Dinner 🌙 / Snack 🍪
+Food search + servings adjuster
+Custom food entry (name, cal, protein, carbs, fats)
+Expandable meal sections with delete per item
+Daily summary card
+Dashboard Integration
+Dashboard.tsx
+ — Sidebar now shows real nutrition data (was random Math.random())
+Water cups are clickable
+"Log Meal" and "View All Nutrition" buttons navigate to /nutrition
+CalorieCard.tsx
+ — Shows actual consumed calories
+MacroRings.tsx
+ — Rings reflect logged macros
+Navigation
+App.tsx
+ — Added /nutrition route
+Sidebar.tsx
+ — Added "Nutrition" link with Apple icon
+BottomNav.tsx
+ — Added "Nutrition" link for mobile
+Bug Fixes (from earlier session)
+Fixed React hooks rules violation in 
+ActiveWorkoutView.tsx
+Fixed import type for verbatimModuleSyntax compliance
+Removed missing animate-in CSS class
+
+Comment
+Ctrl+Alt+M

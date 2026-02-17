@@ -2,13 +2,12 @@ import { motion } from "framer-motion"
 import { User, Ruler, Weight, Cake, Target, Activity } from "lucide-react"
 import { Button } from "@fitlife/ui"
 import { useUserStore } from "@/store/useUserStore"
-import { useWorkoutStore } from "@/store/useWorkoutStore"
 import { useNavigate } from "react-router-dom"
 
 export default function ProfilePage() {
     const navigate = useNavigate()
     const profile = useUserStore((state) => state.profile)
-    const logs = useWorkoutStore((state) => state.logs)
+    const logs: any[] = []
 
     const totalWorkouts = logs.length
     const totalDuration = logs.reduce((sum, log) => sum + log.duration, 0)

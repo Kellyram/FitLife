@@ -1,18 +1,15 @@
 import { motion } from "framer-motion"
-import { Target, TrendingDown, TrendingUp, Minus, Flame, Scale, Dumbbell, Edit2 } from "lucide-react"
+import { Target, TrendingDown, TrendingUp, Minus, Flame, Scale, Edit2, Dumbbell } from "lucide-react"
 import { useUserStore } from "@/store/useUserStore"
-import { useWorkoutStore } from "@/store/useWorkoutStore"
 import { Button } from "@fitlife/ui"
 import { Dialog } from "@fitlife/ui"
 import { Input } from "@fitlife/ui"
-import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 
 export default function GoalsPage() {
     const profile = useUserStore((state) => state.profile)
     const updateProfile = useUserStore((state) => state.updateProfile)
-    const logs = useWorkoutStore((state) => state.logs)
-    const navigate = useNavigate()
+    const logs: any[] = []
     const [editingGoal, setEditingGoal] = useState<string | null>(null)
     const [editValues, setEditValues] = useState({ weight: profile.weight || 70, dailyCalories: profile.goalCalories || 2500 })
 
@@ -205,13 +202,7 @@ export default function GoalsPage() {
                     </div>
                 </Dialog>
 
-                <Button
-                    className="w-full mt-6 bg-gradient-to-r from-blue-600 to-cyan-500 text-white"
-                    onClick={() => navigate("/workout")}
-                >
-                    <Dumbbell className="h-4 w-4 mr-2" />
-                    Start a Workout
-                </Button>
+
             </motion.div>
         </div>
     )
